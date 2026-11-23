@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>已R未退 · 退票账单跟进</title><meta name="description" content="已R未退业务交互原型，包含列表、详情和状态流转处理弹窗。全部数据为虚构演示。"><style>/*STYLE*/</style></head>
+<body>
+<aside class="sidebar">
+ <a class="brand" href="#list"><span class="brand-mark">R<span>↗</span></span><span>供应结算<span class="brand-sub">财务工作台</span></span></a>
+ <div class="nav-group">退票管理</div>
+ <button class="nav-item active" data-action="list"><span class="nav-icon">▤</span>已R未退<span class="nav-badge" id="side-count">23</span></button>
+ <button class="nav-item config-nav" data-action="config"><span class="nav-icon">⚙</span><span>已R未退<br>触发时长配置</span></button>
+ <div class="side-context"><span class="side-dot"></span> 退票账单跟进<span>按乘机人维度追踪</span></div>
+ <div class="side-bottom"><div class="prototype-label">交互原型 <span>V2.0</span></div><p>所有人员、供应商与单据<br>均为虚构演示数据</p><button class="text-button" data-action="reset">↺ 恢复演示数据</button></div>
+</aside>
+<div class="workspace">
+ <header class="topbar"><div class="breadcrumb">供应结算 <span>/</span> 退票管理 <span>/</span> <strong id="crumb">已R未退</strong></div><div class="top-tools"><button class="text-button" data-action="scenes">◇ 演示场景</button><button class="text-button" data-action="notes">ⓘ 原型标注 <span class="tiny-pill">10</span></button><span class="divider"></span><span class="avatar">演</span><span id="permission-label">演示操作员 · 可编辑</span></div></header>
+ <main id="main"></main>
+ <footer class="page-footer">已R未退跟进 · 以对应外部退票单的匹配 / 关联结果为依据<span id="clock-label"></span></footer>
+</div>
+<div id="overlay-root"></div><div id="annotation-root"></div><div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>/*XLSX*/</script><script>/*MODEL*/</script><script>/*TRIGGER*/</script><script>/*EXCEL*/</script><script>/*APP*/</script>
+</body></html>
