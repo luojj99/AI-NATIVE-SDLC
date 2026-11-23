@@ -9,8 +9,14 @@ $shell = New-Object -ComObject WScript.Shell
 $shortcut = $shell.CreateShortcut($shortcutPath)
 if ((Test-Path -LiteralPath $shortcutPath) -and $shortcut.Description -ne $description) { throw '启动目录中已存在同名的其他快捷方式。' }
 New-Item -ItemType Directory -Path (Join-Path $install 'vendor') -Force | Out-Null
+$changed = $false
 foreach ($name in 'build.cjs','watch.cjs','page.html','vendor/marked.cjs','vendor/LICENSE-Marked.md') {
-    Copy-Item -LiteralPath (Join-Path $PSScriptRoot $name) -Destination (Join-Path $install $name) -Force
+    $source = Join-Path $PSScriptRoot $name
+    $destination = Join-Path $install $name
+    if (-not (Test-Path -LiteralPath $destination) -or (Get-FileHash -LiteralPath $source).Hash -ne (Get-FileHash -LiteralPath $destination).Hash) {
+        Copy-Item -LiteralPath $source -Destination $destination -Force
+        $changed = $true
+    }
 }
 function Quote-PSArgument([string]$value) { "'" + $value.Replace("'", "''") + "'" }
 $watch = Join-Path $install 'watch.cjs'
@@ -23,6 +29,10 @@ $shortcut.Description = $description
 $shortcut.WindowStyle = 7
 $shortcut.Save()
 $running = Get-CimInstance Win32_Process -Filter "Name='node.exe'" | Where-Object { $_.CommandLine -and $_.CommandLine.Contains($watch) -and $_.CommandLine.Contains($project) }
+if ($running -and $changed) {
+    foreach ($previousWatcher in $running) { Stop-Process -Id $previousWatcher.ProcessId -ErrorAction Stop }
+    $running = $null
+}
 if (-not $running) {
     $process = Start-Process -FilePath $nodeExe -ArgumentList @('"' + $watch + '"', '"' + $project + '"') -WorkingDirectory $install -WindowStyle Hidden -PassThru
     Start-Sleep -Milliseconds 500

@@ -80,6 +80,10 @@ function buildDocs(project = defaultProject, { check = false } = {}) {
   const diagrams = fs.readdirSync(project, { withFileTypes: true })
     .filter(entry => entry.isFile() && !entry.name.startsWith('.') && !entry.name.startsWith('~') && /\.drawio$/i.test(entry.name))
     .map(entry => entry.name).sort((a, b) => a.localeCompare(b, 'zh-CN'));
+  // Keep PDF names portable between the Windows checkout and Linux builds.
+  const pdfKey = name => path.parse(name).name.normalize('NFC').toLowerCase();
+  const pdfNames = new Map(diagrams.map(name => [pdfKey(name), path.parse(name).name + '.pdf']));
+  if (pdfNames.size !== diagrams.length) throw new Error('有两份流程图对应同一 PDF 文件名，请区分图名。');
   const cache = Object.create(null);
   const cards = [];
   if (!check) fs.mkdirSync(output, { recursive: true });
@@ -123,7 +127,11 @@ function buildDocs(project = defaultProject, { check = false } = {}) {
   writeChanged(path.join(output, 'index.html'), page('产品文档 · 已R未退', catalog));
   for (const name of removed) {
     if (name === path.basename(name) && /\.drawio$/i.test(name)) {
-      fs.rmSync(path.join(output, path.parse(name).name + '.pdf'), { force: true });
+      const oldPdf = path.join(output, path.parse(name).name + '.pdf');
+      const currentName = pdfNames.get(pdfKey(name));
+      if (fs.existsSync(oldPdf) && (!currentName || fs.realpathSync.native(oldPdf) !== fs.realpathSync.native(path.join(output, currentName)))) {
+        fs.rmSync(oldPdf, { force: true });
+      }
     }
   }
   writeChanged(cachePath, JSON.stringify(cache, null, 2) + '\n');
