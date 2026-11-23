@@ -1,0 +1,52 @@
+name: 更新已R未退产品文档
+on:
+  push:
+    branches: ['**']
+    paths:
+      - '已R未退/*.[dD][rR][aA][wW][iI][oO]'
+      - '已R未退/已R未退业务规则.md'
+      - '已R未退/原型/product-docs/**'
+      - '.github/workflows/refund-product-docs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+concurrency:
+  group: refund-docs-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - name: 生成文档并同步到本次分支
+        env:
+          DOCS_BRANCH: ${{ github.ref_name }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch --depth=1 origin "refs/heads/$DOCS_BRANCH"
+            git checkout --detach FETCH_HEAD
+            builder='已R未退/原型/product-docs/build.cjs'
+            if node "$builder" --check; then
+              node "$builder"
+            else
+              if ! command -v drawio >/dev/null; then
+                curl --fail --location --retry 3 --output /tmp/drawio.deb https://github.com/jgraph/drawio-desktop/releases/download/v32.6.1/drawio-amd64-32.6.1.deb
+                echo '515a975fbdb982e0d736b6f99248dbbb856a8b07bb72d6d3648a54b850fa33db  /tmp/drawio.deb' | sha256sum --check
+                sudo apt-get update -qq
+                sudo apt-get install -y /tmp/drawio.deb fonts-noto-cjk xvfb xauth
+              fi
+              xvfb-run -a node "$builder"
+            fi
+            git add -A -- '已R未退/原型/dist/docs'
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m '同步已R未退产品文档'
+            if git push origin "HEAD:refs/heads/$DOCS_BRANCH"; then exit 0; fi
+          done
+          exit 1

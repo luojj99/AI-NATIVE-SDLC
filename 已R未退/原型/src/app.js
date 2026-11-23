@@ -1,5 +1,11 @@
 (() => {
  const M=window.RefundModel, T=window.RefundTrigger, X=window.RefundExcel, $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+ const docsLink=$('#product-docs');
+ if(location.protocol==='https:' || location.protocol==='http:'){
+   const docsUrl=new URL(docsLink.href), previewParams=new URLSearchParams(location.search);
+   for(const key of ['eo_token','eo_time']) if(previewParams.has(key)) docsUrl.searchParams.set(key,previewParams.get(key));
+   docsLink.href=docsUrl.href;
+ }
  const e=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const KEY='refund-prototype-v2.0',PAGE_ORDER=['R004','R009','R011','R015','R013','R017','R019','R007','R001','R022','R025','R005','R006','R027'];
  const emptyFilters=()=>({q:'',status:'',supplier:'',owner:'',rFrom:'',rTo:'',daysMin:'',daysMax:'',countMin:'',countMax:'',group:'all'});
