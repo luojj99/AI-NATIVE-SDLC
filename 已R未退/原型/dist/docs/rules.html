@@ -19,7 +19,7 @@ article li+li{margin-top:5px}.table-wrap{overflow-x:auto;margin:14px 0}table{wid
 @media(max-width:760px){.reader{display:block;padding:0 14px 30px}.reader nav{position:static;margin-bottom:14px;max-height:210px}article,.card{padding:16px}.catalog{padding:20px 15px}.card h2{font-size:18px}header{padding:15px}.catalog h1,h1{font-size:25px}}
 @media print{body{background:white}.reader{display:block;padding:0}.reader nav,body>header{display:none}article{border:0;padding:0}.table-wrap{overflow:visible}table{min-width:0}}
 </style>
-</head><body><header><a data-doc-link href="index.html">← 产品文档</a></header><main class="reader"><nav aria-label="规则目录"><strong>规则目录</strong><a href="#section-2">1. 已R后生成内部退票账单，到期未来账再生成跟进记录</a><a href="#section-3">1.1 已R未退触发时长配置</a><a href="#section-4">1.2 首次触发验收场景</a><a href="#section-5">2. 本模块与资金核实的边界</a><a href="#section-6">状态设计</a><a href="#section-7">已确认规则与超时口径</a><a href="#section-8">已R未退状态流转明细表</a><a href="#section-9">已R未退状态定义表</a><a href="#section-10">Excel批量流转</a><a href="#section-11">导出与回填</a><a href="#section-12">校验预览与确认</a></nav><article><h1 id="section-1">已R未退业务规则</h1>
+</head><body><header><a data-doc-link href="index.html">← 产品文档</a></header><main class="reader"><nav aria-label="规则目录"><strong>规则目录</strong><a href="#section-2">1. 已R后生成内部退票账单，到期未来账再生成跟进记录</a><a href="#section-3">1.1 已R未退触发时长配置</a><a href="#section-4">1.2 首次触发验收场景</a><a href="#section-5">2. 本模块与资金核实的边界</a><a href="#section-6">状态设计</a><a href="#section-7">已确认规则与超时口径</a><a href="#section-8">已R未退状态流转表</a><a href="#section-9">已R未退状态流转明细表</a><a href="#section-10">已R未退状态定义表</a><a href="#section-11">Excel批量流转</a><a href="#section-12">导出与回填</a><a href="#section-13">校验预览与确认</a></nav><article><h1 id="section-1">已R未退业务规则</h1>
 <h2 id="section-2">1. 已R后生成内部退票账单，到期未来账再生成跟进记录</h2>
 <p>乘机人变为已R时，按照乘机人维度生成内部退票账单，从该乘机人的已R时间开始计算首次等待期。此时不生成已R未退跟进记录，也不进入“已R暂不核实”。</p>
 <ul>
@@ -133,7 +133,187 @@ article li+li{margin-top:5px}.table-wrap{overflow-x:auto;margin:14px 0}table{wid
 <li><strong>批量流转</strong>：列表勾选后直接流转仍用于同一当前状态，可统一填写日期后逐笔调整。Excel批量流转允许一份文件混合不同当前状态和不同目标状态，覆盖全部状态下既定规则允许的人工处理，不限于“已承诺退款”。逐笔校验合法流转及对应必填项；转“已承诺退款”时承诺退款日期必填。目标状态留空的行跳过；不通过的行列出原因并保持原记录，确认后仅更新通过的行。自动流转、来账优先和终态不可重开的规则保持有效。</li>
 <li><strong>来账优先</strong>：一旦对应外部退票单关联成功，停止本模块跟进，不再触发待核实或超时分支。执行下表T02—T23前，须确认记录仍在所列当前状态，且尚未关联对应外部退票单。</li>
 </ol>
-<h3 id="section-8">已R未退状态流转明细表</h3>
+<h3 id="section-8">已R未退状态流转表</h3>
+<blockquote>
+<p>纵向为当前状态，横向为目标状态。✅ 表示满足格内条件时可以流转，— 表示该方向无流转。同状态保存信息时，状态维持原值。各编号的填写项、完整条件和示例见下方流转明细表。</p>
+</blockquote>
+<ul>
+<li><strong>首次建单（T01，自动）</strong>　首次等待期到期仍未来账时，系统创建跟进记录，初始状态为待财务核实。</li>
+<li><strong>来账优先（G01，自动）</strong>　任一非终态下，对应外部退票单匹配或关联成功，系统优先转为来账已完结。T02—T23 适用于仍处在表中当前状态且尚未来账的记录。</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>当前状态 → 目标状态</th>
+<th>已R暂不核实</th>
+<th>待财务核实</th>
+<th>待售后核实</th>
+<th>待催款</th>
+<th>已催款</th>
+<th>供应反馈异常</th>
+<th>已承诺退款</th>
+<th>承诺到期未退</th>
+<th>商务升级中</th>
+<th>来账已完结</th>
+<th>未R已关闭</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>已R暂不核实</strong></td>
+<td>—</td>
+<td>✅ T02（自动）<br>到下次核实时间，仍未来账</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✅ G01（自动）</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>待财务核实</strong></td>
+<td>—</td>
+<td>—</td>
+<td>✅ T03（人工）<br>财务无法确认票号状态，明确需售后协助的核实事项</td>
+<td>✅ T04（人工）<br>财务确认真实已R且未来账，本轮催款邮件待发</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✅ G01（自动）</td>
+<td>✅ T05（人工）<br>财务核实实际未R</td>
+</tr>
+<tr>
+<td><strong>待售后核实</strong></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✅ T06（人工）<br>售后确认真实已R且未来账</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✅ G01（自动）</td>
+<td>✅ T07（人工）<br>售后核实实际未R</td>
+</tr>
+<tr>
+<td><strong>待催款</strong></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✅ T08（人工）<br>实际发出本轮催款邮件</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✅ G01（自动）</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>已催款</strong></td>
+<td>✅ T10（人工）<br>供应反馈航司未退款或仍在处理，处理人接受继续等待并指定未来的核实时间</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✅ T09（自动）<br>本轮5个自然日超时，仍未来账</td>
+<td>✅ T11（人工）<br>处理人接受明确且尚未到期的承诺退款时间</td>
+<td>—</td>
+<td>✅ T12（人工）<br>承诺不可接受或需商务协调，处理人决定升级</td>
+<td>✅ G01（自动）</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>供应反馈异常</strong></td>
+<td>✅ T14（人工）<br>迟到回复称航司未退款或仍在处理，处理人接受继续等待并指定未来的核实时间</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✅ T13（人工）<br>实际再次发出催款邮件</td>
+<td>—</td>
+<td>✅ T15（人工）<br>处理人接受迟到回复中明确且尚未到期的承诺退款时间</td>
+<td>—</td>
+<td>✅ T16（人工）<br>持续无有效结果、承诺不可接受或需协调，处理人决定升级</td>
+<td>✅ G01（自动）</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>已承诺退款</strong></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✅ T17（自动）<br>已过承诺退款时间，仍未来账</td>
+<td>—</td>
+<td>✅ G01（自动）</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>承诺到期未退</strong></td>
+<td>✅ T19（人工）<br>供应仍在处理且未给出可接受的新退款时间，处理人接受继续等待并指定未来的核实时间</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✅ T18（人工）<br>实际再次发出催款邮件</td>
+<td>—</td>
+<td>✅ T20（人工）<br>处理人接受新的、明确且尚未到期的退款时间</td>
+<td>—</td>
+<td>✅ T21（人工）<br>新承诺不可接受或仍无可接受结果，处理人决定升级</td>
+<td>✅ G01（自动）</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>商务升级中</strong></td>
+<td>✅ T22（人工）<br>商务协调后确认仍需等待，处理人接受并指定未来的核实时间</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✅ T23（人工）<br>商务协调后取得明确且尚未到期的承诺退款时间，处理人接受</td>
+<td>—</td>
+<td>—</td>
+<td>✅ G01（自动）</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>来账已完结</strong></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>未R已关闭</strong></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody></table></div>
+<h3 id="section-9">已R未退状态流转明细表</h3>
 <p>流转编号用于对应各项处理规则。“自动”表示由系统触发；“人工”表示由处理人发起。表中的核实结果、反馈、承诺和说明均可使用文字记录，不要求强制上传附件。</p>
 <p><strong>备注</strong>：</p>
 <ol>
@@ -271,7 +451,7 @@ article li+li{margin-top:5px}.table-wrap{overflow-x:auto;margin:14px 0}table{wid
 <td>对应外部退票单已匹配或关联成功。金额对平或存在差异均可完结，并交差异单流程处理；不校验实际资金到账或整批结算。仅知道钱已退回、但未建立或未关联外部单，不满足条件。<br><br><strong>举例</strong>　一笔1000元的票还在商务跟进，财务将供应导入的980元外部退票单关联到该笔记录。系统随即完结跟进，20元差额交差异单流程处理。另一笔已核实退款的票，由财务手工补建并关联外部退票单后也会完结。</td>
 </tr>
 </tbody></table></div>
-<h3 id="section-9">已R未退状态定义表</h3>
+<h3 id="section-10">已R未退状态定义表</h3>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -360,8 +540,8 @@ article li+li{margin-top:5px}.table-wrap{overflow-x:auto;margin:14px 0}table{wid
 <td>财务或售后已核实实际未R，关闭本笔已R未退跟进记录；仅能从待财务核实、待售后核实转入。</td>
 </tr>
 </tbody></table></div>
-<h2 id="section-10">Excel批量流转</h2>
-<h3 id="section-11">导出与回填</h3>
+<h2 id="section-11">Excel批量流转</h2>
+<h3 id="section-12">导出与回填</h3>
 <ul>
 <li>保留记录编号、订单号、票号、乘机人、供应商、导出时状态及隐藏的导出校验标识，用于定位记录并核对导出后是否发生变化。</li>
 <li>每笔可独立填写目标状态，支持混合导入；目标状态留空表示本次不处理。填写当前状态表示补充信息，不产生新的状态流转。</li>
@@ -404,7 +584,7 @@ article li+li{margin-top:5px}.table-wrap{overflow-x:auto;margin:14px 0}table{wid
 <td>Excel不能强行替代到期检查或外部单关联。来账已完结须有对应外部退票单关联依据；两种终态均不能回退或重开。</td>
 </tr>
 </tbody></table></div>
-<h3 id="section-12">校验预览与确认</h3>
+<h3 id="section-13">校验预览与确认</h3>
 <ol>
 <li>读取.xlsx或.xls的“批量流转”工作表，逐行检查记录、目标状态、必填日期、人员及重复编号。原型每次最多1000笔、10MB。日期支持Excel日期值或明确的年月日、日期加时刻，按北京时间解释。</li>
 <li>预览显示每行当前状态、目标状态、本次日期、处理人和校验结果。通过的行显示该目标的处理提示。不通过或跳过的行显示具体原因。</li>
