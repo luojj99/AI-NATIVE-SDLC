@@ -1,5 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
+const { buildDocs } = require('./product-docs/build.cjs');
 
 function readSource(file) {
   return fs.readFileSync(path.join(__dirname, 'src', file), 'utf8');
@@ -25,6 +26,6 @@ for (const [marker, content] of parts) {
 }
 
 const outputDir = path.join(__dirname, 'dist');
-fs.mkdirSync(outputDir, { recursive: true });
+buildDocs();
 fs.writeFileSync(path.join(outputDir, 'index.html'), html, 'utf8');
-console.log('已生成 dist/index.html');
+console.log('已生成原型、产品文档和流程图 PDF。');

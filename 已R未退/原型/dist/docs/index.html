@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>产品文档 · 已R未退</title>
+<style>
+:root{font:15px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;color:#1c2b40;background:#f5f7fa}
+*{box-sizing:border-box}body{margin:0}a{color:#205bbd;text-decoration:none}a:hover{text-decoration:underline}a:focus-visible{outline:3px solid #82adff;outline-offset:4px}
+header{max-width:1240px;margin:auto;padding:22px 28px;color:#64758c;font-size:14px}.slash{margin:0 10px;color:#9daabe}
+.catalog{max-width:880px;margin:auto;padding:22px 24px 70px}.catalog header{padding:0}.catalog h1{margin:20px 0 27px}
+h1,h2,h3,h4{line-height:1.45;scroll-margin-top:18px}h1{font-size:30px}h2{font-size:21px}h3{font-size:18px}h4{font-size:16px}
+.cards{display:grid;gap:16px}.card,article,.reader nav{border:1px solid #dce3ed;border-radius:10px;background:#fff}
+.card{padding:22px 26px}.card-row{display:flex;align-items:center;justify-content:space-between;gap:12px}.card small{color:#66758a;font-size:13px}.card h2{margin:3px 0 0}.card p{margin:13px 0 0;color:#596b80}
+.open{padding:7px 15px;border:1px solid #bdd0ef;border-radius:6px;white-space:nowrap;font-weight:600;background:#f5f9ff}.pages{list-style:none;border-top:1px solid #e6eaf0;margin:16px 0 0;padding:12px 0 0}.pages li{padding:2px 0}
+.reader{max-width:1240px;padding:0 24px 60px;margin:auto;display:grid;grid-template-columns:210px minmax(0,1fr);gap:18px;align-items:start}
+.reader nav{position:sticky;top:16px;padding:15px;display:grid;gap:6px;max-height:calc(100vh - 32px);overflow:auto}.reader nav a{font-size:13px;line-height:1.6}
+article{min-width:0;padding:22px 30px;overflow-wrap:anywhere}article h1:first-child{margin-top:0}article h2,article h3,article h4{margin-top:1.8em}
+article li+li{margin-top:5px}.table-wrap{overflow-x:auto;margin:14px 0}table{width:100%;min-width:490px;border-collapse:collapse;font-size:14px}td,th{border:1px solid #dce3ed;padding:9px 11px;vertical-align:top;text-align:left}th{background:#f1f5fa}tr:nth-child(even) td{background:#fafbfd}
+@media(max-width:760px){.reader{display:block;padding:0 14px 30px}.reader nav{position:static;margin-bottom:14px;max-height:210px}article,.card{padding:16px}.catalog{padding:20px 15px}.card h2{font-size:18px}header{padding:15px}.catalog h1,h1{font-size:25px}}
+@media print{body{background:white}.reader{display:block;padding:0}.reader nav,body>header{display:none}article{border:0;padding:0}.table-wrap{overflow:visible}table{min-width:0}}
+</style>
+</head><body><main class="catalog"><header><span>退票管理</span><span class="slash">/</span>已R未退</header><h1>产品文档</h1><div class="cards"><section class="card"><div class="card-row"><div><small>流程图 · PDF</small><h2>已R未退状态机</h2></div><a class="open" data-doc-link href="%E5%B7%B2R%E6%9C%AA%E9%80%80%E7%8A%B6%E6%80%81%E6%9C%BA.pdf">查看 PDF</a></div><ol class="pages"><li><a data-doc-link href="%E5%B7%B2R%E6%9C%AA%E9%80%80%E7%8A%B6%E6%80%81%E6%9C%BA.pdf#page=1">01 主状态机与超时处理</a></li><li><a data-doc-link href="%E5%B7%B2R%E6%9C%AA%E9%80%80%E7%8A%B6%E6%80%81%E6%9C%BA.pdf#page=2">02 供应反馈分流与来账完结</a></li></ol></section><section class="card"><div class="card-row"><div><small>业务规则</small><h2>已R未退业务规则</h2></div><a class="open" data-doc-link href="rules.html">阅读正文</a></div><p>首次触发、来账完结、状态流转和 Excel 批量处理。</p></section></div></main>
+<script>
+if (location.protocol === 'http:' || location.protocol === 'https:') {
+  const auth = new URLSearchParams(location.search);
+  for (const link of document.querySelectorAll('a[data-doc-link]')) {
+    const next = new URL(link.href);
+    for (const key of ['eo_token', 'eo_time']) if (auth.has(key)) next.searchParams.set(key, auth.get(key));
+    link.href = next.href;
+  }
+}
+</script></body></html>

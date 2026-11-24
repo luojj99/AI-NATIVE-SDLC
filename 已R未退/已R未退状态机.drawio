@@ -1,0 +1,399 @@
+<mxfile host="Electron" agent="draw.io" pages="2">
+  <diagram id="page0" name="01 主状态机与超时处理">
+    <mxGraphModel dx="2814" dy="1647" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2230" pageHeight="2680" background="#FFFFFF" math="0" shadow="0" adaptiveColors="auto">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="YuJMAN3QynzREA3dW6wH-1" data-rules="T14" edge="1" parent="1" source="abnormal" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0.8;exitY=0;entryX=1;entryY=0.83;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="wait" value="&lt;b&gt;T14　迟到回复只有进展，负责人愿意等&lt;/b&gt;&lt;br&gt;例　8日回复“还在审核”，我方定12日再查。">
+          <mxGeometry relative="1" x="0.566064" as="geometry">
+            <mxPoint y="-35" as="offset" />
+            <Array as="points">
+              <mxPoint x="1572" y="1240" />
+              <mxPoint x="1680" y="1240" />
+              <mxPoint x="1680" y="340" />
+              <mxPoint x="1050" y="340" />
+              <mxPoint x="1050" y="302.44" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YuJMAN3QynzREA3dW6wH-2" data-rules="T15" edge="1" parent="1" source="abnormal" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0;exitY=0.75;entryX=1;entryY=0.25;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="promised" value="&lt;b&gt;T15　迟到回复给出明确退款日，负责人接受&lt;/b&gt;&lt;br&gt;例　8日收到“15日退款”，登记承诺日。">
+          <mxGeometry relative="1" x="0.443299" as="geometry">
+            <mxPoint x="14" as="offset" />
+            <Array as="points">
+              <mxPoint x="1060" y="1377" />
+              <mxPoint x="1060" y="1743" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VlYCwBMkEzXrZ5QK3-kf-1" data-rules="T23" edge="1" parent="1" source="business" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0;exitY=0.75;entryX=0.3;entryY=1;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="promised" value="&lt;b&gt;T23　商务协调取得明确退款日，处理人接受&lt;/b&gt;&lt;br&gt;例　供应商确认18日退款，我方登记18日。">
+          <mxGeometry relative="1" x="0.023687" as="geometry">
+            <mxPoint y="-39" as="offset" />
+            <Array as="points">
+              <mxPoint x="1338" y="2187" />
+              <mxPoint x="1338" y="2000" />
+              <mxPoint x="802" y="2000" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VlYCwBMkEzXrZ5QK3-kf-2" data-rules="T22" edge="1" parent="1" source="business" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=1;exitY=0.75;entryX=0.72;entryY=0;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="wait" value="&lt;b&gt;T22　商务协调后只有进展，处理人同意再等&lt;/b&gt;&lt;br&gt;例　航司正在复核，退款日期未定，&lt;br&gt;我方定18日10时再核实。">
+          <mxGeometry relative="1" x="-0.870614" as="geometry">
+            <mxPoint y="-46" as="offset" />
+            <Array as="points">
+              <mxPoint x="2070" y="2187" />
+              <mxPoint x="2070" y="147" />
+              <mxPoint x="902.8" y="147" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T01" data-rules="T01" edge="1" parent="1" source="start" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#D8414B;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="finance" value="&lt;b&gt;T01　首次等待到期仍未来账，系统建单&lt;/b&gt;&lt;br&gt;例　1日10时已R，适用15个自然日。&lt;br&gt;16日10时仍未来账，首次建单交财务。">
+          <mxGeometry relative="1" x="0.009524" as="geometry">
+            <mxPoint y="-50" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T02" data-rules="T02" edge="1" parent="1" source="wait" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#D8414B;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="finance" value="&lt;b&gt;T02　下次核实时间已到，仍未来账&lt;/b&gt;&lt;br&gt;例　我方约15日10时再查，到点仍无单。">
+          <mxGeometry relative="1" x="-0.076336" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T03" data-rules="T03" edge="1" parent="1" source="finance" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="service" value="&lt;b&gt;T03　财务查不清票号是否已R&lt;/b&gt;&lt;br&gt;例　只有退票申请，请售后向航司核实。">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="-48" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T04" data-rules="T04" edge="1" parent="1" source="finance" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="ready" value="&lt;b&gt;T04　财务确认已R且未来账，邮件待发&lt;/b&gt;&lt;br&gt;例　核对退票记录后，将票号列入待催清单。">
+          <mxGeometry relative="1" x="0.12766" as="geometry">
+            <mxPoint x="50" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T05" data-rules="T05" edge="1" parent="1" source="finance" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0.25;exitY=1;entryX=1;entryY=0.25;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="closed" value="&lt;b&gt;T05　财务查实本票未R&lt;/b&gt;&lt;br&gt;例　误标了另一张退票，本票仍可使用。">
+          <mxGeometry relative="1" x="-0.334274" as="geometry">
+            <mxPoint y="-30" as="offset" />
+            <Array as="points">
+              <mxPoint x="790" y="709" />
+              <mxPoint x="468" y="709" />
+              <mxPoint x="468" y="943" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T06" data-rules="T06" edge="1" parent="1" source="service" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0;exitY=0.5;entryX=0;entryY=0.65;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="ready" value="&lt;b&gt;T06　售后查实已R，仍未来账&lt;/b&gt;&lt;br&gt;例　航司有退票记录，供应账单缺这张票。">
+          <mxGeometry relative="1" x="0.326949" as="geometry">
+            <mxPoint y="-33" as="offset" />
+            <Array as="points">
+              <mxPoint x="110" y="610" />
+              <mxPoint x="110" y="1123" />
+              <mxPoint x="674" y="1123" />
+              <mxPoint x="674" y="970.2" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T07" data-rules="T07" edge="1" parent="1" source="service" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="closed" value="&lt;b&gt;T07　售后查实本票未R&lt;/b&gt;&lt;br&gt;例　航司确认申请已撤回，本票仍可用。">
+          <mxGeometry relative="1" x="0.085106" as="geometry">
+            <mxPoint x="3" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="endclosed" edge="1" parent="1" source="closed" style="html=1;rounded=1;curved=0;edgeStyle=none;endArrow=classic;endFill=1;endSize=7;strokeWidth=1.3;strokeColor=#202020;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=15;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" target="end_closed" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="T08" data-rules="T08" edge="1" parent="1" source="ready" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="chased" value="&lt;b&gt;T08　本轮催款邮件已发出&lt;/b&gt;&lt;br&gt;例　2日10时发出首封，次数从0增至1，&lt;br&gt;开始本轮5个自然日的等待。">
+          <mxGeometry relative="1" x="-0.060241" as="geometry">
+            <mxPoint x="5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T09" data-rules="T09" edge="1" parent="1" source="chased" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#D8414B;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=1;exitY=0.4;entryX=0;entryY=0.4;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="abnormal" value="&lt;b&gt;T09　催款超过5个自然日，仍为已催款且未来账&lt;/b&gt;&lt;br&gt;例　2日10时发信，7日10时05分检查，&lt;br&gt;供应已回信，负责人还未登记。">
+          <mxGeometry relative="1" x="-0.014634" as="geometry">
+            <mxPoint y="-46.2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T10" data-rules="T10" edge="1" parent="1" source="chased" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0;exitY=0.31;entryX=0;entryY=0.5;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="wait" value="&lt;b&gt;T10　供应只报进度，负责人同意继续等&lt;/b&gt;&lt;br&gt;例　航司还在审核，我方定8日10时再查。">
+          <mxGeometry relative="1" x="0.743725" as="geometry">
+            <mxPoint y="-35" as="offset" />
+            <Array as="points">
+              <mxPoint x="50" y="1347.08" />
+              <mxPoint x="50" y="280" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T11" data-rules="T11" edge="1" parent="1" source="chased" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="promised" value="&lt;b&gt;T11　供应给出明确退款日，负责人接受&lt;/b&gt;&lt;br&gt;例　3日收到“10日退款”，登记承诺日。">
+          <mxGeometry relative="1" x="-0.084337" as="geometry">
+            <mxPoint x="-80" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T13" data-rules="T13" edge="1" parent="1" source="abnormal" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0.5;exitY=0;entryX=0.8;entryY=0;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="chased" value="&lt;b&gt;T13　催款超时后，已再次发出邮件&lt;/b&gt;&lt;br&gt;例　8日第二次发信，次数从1增至2，&lt;br&gt;重新等5个自然日。">
+          <mxGeometry relative="1" x="-0.061466" as="geometry">
+            <mxPoint y="-39" as="offset" />
+            <Array as="points">
+              <mxPoint x="1500" y="1192" />
+              <mxPoint x="922" y="1192" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T16" data-rules="T16" edge="1" parent="1" source="abnormal" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=1;exitY=0.5;entryX=0.8;entryY=0;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="business" value="&lt;b&gt;T16　催款超时后争议未解，负责人决定升级&lt;/b&gt;&lt;br&gt;例　核对票号后供应仍拒绝处理，&lt;br&gt;交商务核对责任。">
+          <mxGeometry relative="1" x="-0.621739" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1668" y="1360" />
+              <mxPoint x="1668" y="2040" />
+              <mxPoint x="1572" y="2040" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T17" data-rules="T17" edge="1" parent="1" source="promised" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#D8414B;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=1;exitY=0.58;entryX=0;entryY=0.58;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="overdue" value="&lt;b&gt;T17　承诺退款时间已过，仍未来账&lt;/b&gt;&lt;br&gt;例　承诺只填10日，11日早上仍未来账。">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="32.56" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T18" data-rules="T18" edge="1" parent="1" source="overdue" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0.15;exitY=0;entryX=1;entryY=0.78;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="chased" value="&lt;b&gt;T18　原承诺逾期，已再次发邮件催款&lt;/b&gt;&lt;br&gt;例　11日发信单独追问本票，次数从1增至2。">
+          <mxGeometry relative="1" x="-0.056699" as="geometry">
+            <mxPoint y="-38" as="offset" />
+            <Array as="points">
+              <mxPoint x="1416" y="1510" />
+              <mxPoint x="1018" y="1510" />
+              <mxPoint x="1018" y="1379.04" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T21" data-rules="T21" edge="1" parent="1" source="overdue" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="business" value="&lt;b&gt;T21　延期不可接受，负责人决定升级&lt;/b&gt;&lt;br&gt;例　10日失约后又要求延两个月，交商务。">
+          <mxGeometry relative="1" x="-0.046784" as="geometry">
+            <mxPoint x="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="G01" data-rules="G01" edge="1" parent="1" source="globalrule" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#D8414B;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="done" value="&lt;b&gt;G01　对应外部退票单关联或匹配成功，系统完结&lt;/b&gt;&lt;br&gt;例　应退1000元，980元外部单已关联，&lt;br&gt;跟进完结，20元交差异单处理。">
+          <mxGeometry relative="1" x="-0.083333" as="geometry">
+            <mxPoint x="10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="enddone" edge="1" parent="1" source="done" style="html=1;rounded=1;curved=0;edgeStyle=none;endArrow=classic;endFill=1;endSize=7;strokeWidth=1.3;strokeColor=#202020;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=15;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" target="end_done" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YuJMAN3QynzREA3dW6wH-3" data-rules="T20" edge="1" parent="1" source="overdue" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0.35;exitY=1;entryX=0.78;entryY=1;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="promised" value="&lt;b&gt;T20　原承诺逾期，负责人接受新的明确退款日&lt;/b&gt;&lt;br&gt;例　原定10日退，供应商改为承诺15日退款，&lt;br&gt;我方接受并登记15日。">
+          <mxGeometry relative="1" x="0.058338" as="geometry">
+            <mxPoint y="-47" as="offset" />
+            <Array as="points">
+              <mxPoint x="1464" y="1908" />
+              <mxPoint x="917.2" y="1908" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T12" data-rules="T12" edge="1" parent="1" source="chased" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=0.25;exitY=1;entryX=0;entryY=0.25;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="business" value="&lt;b&gt;T12　催款后遇到争议，负责人决定升级&lt;/b&gt;&lt;br&gt;例　供应称应由另一家出票方退款，&lt;br&gt;负责人将归属争议交商务协调。">
+          <mxGeometry relative="1" x="-0.438914" as="geometry">
+            <mxPoint x="7" as="offset" />
+            <Array as="points">
+              <mxPoint x="790" y="1445" />
+              <mxPoint x="470" y="1445" />
+              <mxPoint x="470" y="2070" />
+              <mxPoint x="1280" y="2070" />
+              <mxPoint x="1280" y="2153" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T19" data-rules="T19" edge="1" parent="1" source="overdue" style="html=1;edgeStyle=none;rounded=1;arcSize=12;endArrow=classic;endFill=1;endSize=9;strokeWidth=1.6;strokeColor=#333333;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;exitX=1;exitY=0.27;entryX=1;entryY=0.22;exitPerimeter=0;entryPerimeter=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;jumpStyle=arc;jumpSize=8;" target="wait" value="&lt;b&gt;T19　原承诺逾期，新退款日未定，负责人愿意等&lt;/b&gt;&lt;br&gt;例　原定10日退，对方只说“还在审核”。&lt;br&gt;我方同意继续等，定15日10时再查。">
+          <mxGeometry relative="1" x="-0.782957" as="geometry">
+            <mxPoint x="3" as="offset" />
+            <Array as="points">
+              <mxPoint x="1868" y="1744.36" />
+              <mxPoint x="1868" y="201" />
+              <mxPoint x="1060" y="201" />
+              <mxPoint x="1060" y="260.96" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="title" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=left;verticalAlign=middle;fontSize=30;fontStyle=1;fontColor=#202020;spacing=0;" value="已R未退状态机" vertex="1">
+          <mxGeometry height="52" width="900" x="42" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=left;verticalAlign=middle;fontSize=16;fontStyle=0;fontColor=#555555;spacing=0;" value="按乘机人跟进。箭头上列有触发条件和独立业务例子，例中日期均为11月。" vertex="1">
+          <mxGeometry height="45" width="1030" x="42" y="78" as="geometry" />
+        </mxCell>
+        <mxCell id="legend0" data-role="legend" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9BBEFF;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;" value="" vertex="1">
+          <mxGeometry height="24" width="37" x="1160" y="33" as="geometry" />
+        </mxCell>
+        <mxCell id="legendtext0" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=left;verticalAlign=middle;fontSize=15;fontStyle=0;fontColor=#202020;spacing=0;" value="常规处理状态 / 终态" vertex="1">
+          <mxGeometry height="33" width="210" x="1208" y="29" as="geometry" />
+        </mxCell>
+        <mxCell id="legend1" data-role="legend" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF9999;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;" value="" vertex="1">
+          <mxGeometry height="24" width="37" x="1430" y="33" as="geometry" />
+        </mxCell>
+        <mxCell id="legendtext1" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=left;verticalAlign=middle;fontSize=15;fontStyle=0;fontColor=#202020;spacing=0;" value="异常或商务升级状态" vertex="1">
+          <mxGeometry height="33" width="256" x="1478" y="29" as="geometry" />
+        </mxCell>
+        <mxCell id="legend2" data-role="legend" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFE477;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;" value="" vertex="1">
+          <mxGeometry height="24" width="37" x="1750" y="33" as="geometry" />
+        </mxCell>
+        <mxCell id="legendtext2" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=left;verticalAlign=middle;fontSize=15;fontStyle=0;fontColor=#202020;spacing=0;" value="辅助规则说明（不是状态）" vertex="1">
+          <mxGeometry height="33" width="330" x="1798" y="29" as="geometry" />
+        </mxCell>
+        <mxCell id="linelegend" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=left;verticalAlign=middle;fontSize=15;fontStyle=0;fontColor=#202020;spacing=0;" value="黑箭头由处理人发起，红箭头由系统触发。" vertex="1">
+          <mxGeometry height="35" width="940" x="1160" y="76" as="geometry" />
+        </mxCell>
+        <mxCell id="start" data-role="symbol" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#202020;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;shape=ellipse;perimeter=ellipsePerimeter;strokeColor=#E3434E;" value="" vertex="1">
+          <mxGeometry height="20" width="20" x="1390" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="wait" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9BBEFF;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=20;spacing=8;" value="已R暂不核实" vertex="1">
+          <mxGeometry height="68" width="240" x="730" y="246" as="geometry" />
+        </mxCell>
+        <mxCell id="finance" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9BBEFF;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=20;spacing=8;" value="待财务核实" vertex="1">
+          <mxGeometry height="68" width="240" x="730" y="576" as="geometry" />
+        </mxCell>
+        <mxCell id="service" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9BBEFF;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=20;spacing=8;" value="待售后核实" vertex="1">
+          <mxGeometry height="68" width="240" x="140" y="576" as="geometry" />
+        </mxCell>
+        <mxCell id="ready" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9BBEFF;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=20;spacing=8;" value="待催款" vertex="1">
+          <mxGeometry height="68" width="240" x="730" y="926" as="geometry" />
+        </mxCell>
+        <mxCell id="closed" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9BBEFF;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=20;spacing=8;" value="未R已关闭" vertex="1">
+          <mxGeometry height="68" width="240" x="140" y="926" as="geometry" />
+        </mxCell>
+        <mxCell id="chased" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9BBEFF;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=20;spacing=8;" value="已催款" vertex="1">
+          <mxGeometry height="68" width="240" x="730" y="1326" as="geometry" />
+        </mxCell>
+        <mxCell id="abnormal" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF9999;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=20;spacing=8;" value="供应反馈异常" vertex="1">
+          <mxGeometry height="68" width="240" x="1380" y="1326" as="geometry" />
+        </mxCell>
+        <mxCell id="promised" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9BBEFF;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=20;spacing=8;" value="已承诺退款" vertex="1">
+          <mxGeometry height="68" width="240" x="730" y="1726" as="geometry" />
+        </mxCell>
+        <mxCell id="overdue" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF9999;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=20;spacing=8;" value="承诺到期未退" vertex="1">
+          <mxGeometry height="68" width="240" x="1380" y="1726" as="geometry" />
+        </mxCell>
+        <mxCell id="business" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF9999;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=20;spacing=8;" value="商务升级中" vertex="1">
+          <mxGeometry height="68" width="240" x="1380" y="2136" as="geometry" />
+        </mxCell>
+        <mxCell id="done" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9BBEFF;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=20;spacing=8;" value="来账已完结" vertex="1">
+          <mxGeometry height="68" width="240" x="730" y="2416" as="geometry" />
+        </mxCell>
+        <mxCell id="end_closed" data-role="symbol" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#202020;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;shape=doubleEllipse;perimeter=ellipsePerimeter;strokeColor=#E3434E;" value="" vertex="1">
+          <mxGeometry height="22" width="22" x="249" y="1068" as="geometry" />
+        </mxCell>
+        <mxCell id="end_done" data-role="symbol" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#202020;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;shape=doubleEllipse;perimeter=ellipsePerimeter;strokeColor=#E3434E;" value="" vertex="1">
+          <mxGeometry height="22" width="22" x="839" y="2535" as="geometry" />
+        </mxCell>
+        <mxCell id="initialwait" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=left;verticalAlign=middle;fontSize=15;fontStyle=0;fontColor=#555555;spacing=0;" value="已R时先按乘机人生成内部退票账单。&lt;br&gt;首次等待期按当前有效配置计算。" vertex="1">
+          <mxGeometry height="55" width="405" x="995" y="624" as="geometry" />
+        </mxCell>
+        <mxCell id="businessnote" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=left;verticalAlign=middle;fontSize=15;fontStyle=0;fontColor=#555555;spacing=0;" value="商务协调仍无结果，或供应商明确拒退，&lt;br&gt;继续保留在“商务升级中”。" vertex="1">
+          <mxGeometry height="68" width="510" x="1325" y="2240" as="geometry" />
+        </mxCell>
+        <mxCell id="globalrule" data-role="rule" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFE477;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;fontSize=16;" value="&lt;b&gt;G01 适用于任一非终态&lt;/b&gt;&lt;br&gt;外部退票单可由供应商导入，或由财务手工补建。" vertex="1">
+          <mxGeometry height="90" width="480" x="610" y="2134" as="geometry" />
+        </mxCell>
+        <mxCell id="footer" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=left;verticalAlign=middle;fontSize=15;fontStyle=0;fontColor=#555555;spacing=0;" value="“来账”指本笔已匹配或关联对应外部退票单。金额差异交差异单处理。第2页汇总供应回复的去向和来账完结规则。" vertex="1">
+          <mxGeometry height="45" width="2050" x="42" y="2610" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="page1" name="02 供应反馈分流与来账完结">
+    <mxGraphModel dx="2452" dy="1719" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1420" pageHeight="1720" background="#FFFFFF" math="0" shadow="0" adaptiveColors="auto">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=left;verticalAlign=middle;fontSize=30;fontStyle=1;fontColor=#202020;spacing=0;" value="供应反馈分流与来账完结" vertex="1">
+          <mxGeometry height="50" width="1250" x="40" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=left;verticalAlign=middle;fontSize=16;fontStyle=0;fontColor=#555555;spacing=0;" value="黄色框说明处理规则。承诺逾期后的 T19 和 T20 在本页并排举例，第1页可沿箭头查看全部流转。" vertex="1">
+          <mxGeometry height="35" width="1320" x="40" y="87" as="geometry" />
+        </mxCell>
+        <mxCell id="chased" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9BBEFF;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;" value="已催款" vertex="1">
+          <mxGeometry height="64" width="200" x="80" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="abnormal" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF9999;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;" value="供应反馈异常" vertex="1">
+          <mxGeometry height="64" width="200" x="400" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="overdue" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF9999;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;" value="承诺到期未退" vertex="1">
+          <mxGeometry height="64" width="200" x="720" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="business" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF9999;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;" value="商务升级中" vertex="1">
+          <mxGeometry height="64" width="200" x="1040" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="reply" data-role="rule" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFE477;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;fontSize=18;" value="&lt;b&gt;由处理人登记供应回复 / 商务处理结果&lt;/b&gt;&lt;br&gt;包含迟到回复；系统不自动读取邮箱" vertex="1">
+          <mxGeometry height="85" width="520" x="400" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="input0" edge="1" parent="1" source="chased" style="html=1;rounded=1;curved=0;edgeStyle=none;endArrow=classic;endFill=1;endSize=7;strokeWidth=1.3;strokeColor=#202020;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=15;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" target="reply" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="input1" edge="1" parent="1" source="abnormal" style="html=1;rounded=1;curved=0;edgeStyle=none;endArrow=classic;endFill=1;endSize=7;strokeWidth=1.3;strokeColor=#202020;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=15;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" target="reply" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="input2" edge="1" parent="1" source="overdue" style="html=1;rounded=1;curved=0;edgeStyle=none;endArrow=classic;endFill=1;endSize=7;strokeWidth=1.3;strokeColor=#202020;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=15;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" target="reply" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="input3" edge="1" parent="1" source="business" style="html=1;rounded=1;curved=0;edgeStyle=none;endArrow=classic;endFill=1;endSize=7;strokeWidth=1.3;strokeColor=#202020;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=15;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" target="reply" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wait" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9BBEFF;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;" value="已R暂不核实" vertex="1">
+          <mxGeometry height="64" width="200" x="80" y="730" as="geometry" />
+        </mxCell>
+        <mxCell id="promised" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9BBEFF;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;" value="已承诺退款" vertex="1">
+          <mxGeometry height="64" width="200" x="560" y="730" as="geometry" />
+        </mxCell>
+        <mxCell id="business_result" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF9999;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;" value="商务升级中" vertex="1">
+          <mxGeometry height="64" width="200" x="1040" y="730" as="geometry" />
+        </mxCell>
+        <mxCell id="reply_wait" data-rules="T10 T14 T19 T22" edge="1" parent="1" source="reply" style="html=1;rounded=1;curved=1;edgeStyle=none;endArrow=classic;endFill=1;endSize=7;strokeWidth=1.3;strokeColor=#202020;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=15;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" target="wait" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="180" y="535" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="reply_promise" data-rules="T11 T15 T20 T23" edge="1" parent="1" source="reply" style="html=1;rounded=1;curved=0;edgeStyle=none;endArrow=classic;endFill=1;endSize=7;strokeWidth=1.3;strokeColor=#202020;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=15;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" target="promised" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="reply_escalate" data-rules="T12 T16 T21" edge="1" parent="1" source="reply" style="html=1;rounded=1;curved=1;edgeStyle=none;endArrow=classic;endFill=1;endSize=7;strokeWidth=1.3;strokeColor=#202020;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=15;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" target="business_result" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1320" y="470" />
+              <mxPoint x="1320" y="700" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="waitlabel" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=left;verticalAlign=middle;fontSize=16;fontStyle=0;fontColor=#202020;spacing=0;" value="航司未退款 / 仍在处理中&lt;br&gt;接受继续等待&lt;br&gt;&lt;b&gt;必填下次核实时间&lt;/b&gt;&lt;br&gt;T10 / T14 / T19 / T22" vertex="1">
+          <mxGeometry height="120" width="280" x="285" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="promiselabel" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=left;verticalAlign=middle;fontSize=16;fontStyle=0;fontColor=#202020;spacing=0;" value="给出可接受的明确日期&lt;br&gt;&lt;b&gt;必填承诺退款时间&lt;/b&gt;&lt;br&gt;T11 / T15 / T20 / T23" vertex="1">
+          <mxGeometry height="100" width="280" x="700" y="555" as="geometry" />
+        </mxCell>
+        <mxCell id="businesslabel" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=left;verticalAlign=middle;fontSize=16;fontStyle=0;fontColor=#202020;spacing=0;" value="承诺无法接受&lt;br&gt;需要商务介入或继续协调&lt;br&gt;T12 / T16 / T21" vertex="1">
+          <mxGeometry height="100" width="270" x="1040" y="555" as="geometry" />
+        </mxCell>
+        <mxCell id="waitnote" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=center;verticalAlign=middle;fontSize=15;fontStyle=0;fontColor=#555555;spacing=0;" value="到期仍未来账&lt;br&gt;自动 → 待财务核实（T02）" vertex="1">
+          <mxGeometry height="65" width="340" x="45" y="810" as="geometry" />
+        </mxCell>
+        <mxCell id="promisenote" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=center;verticalAlign=middle;fontSize=15;fontStyle=0;fontColor=#555555;spacing=0;" value="承诺到期仍未来账&lt;br&gt;自动 → 承诺到期未退（T17）" vertex="1">
+          <mxGeometry height="65" width="350" x="485" y="810" as="geometry" />
+        </mxCell>
+        <mxCell id="businessnote" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=center;verticalAlign=middle;fontSize=15;fontStyle=0;fontColor=#555555;spacing=0;" value="已在商务阶段且无结果 / 明确拒退&lt;br&gt;保持商务升级中，不额外生成流转&lt;br&gt;本期不设“放弃追款”终态" vertex="1">
+          <mxGeometry height="82" width="390" x="980" y="807" as="geometry" />
+        </mxCell>
+        <mxCell id="allactive" data-role="rule" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFE477;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;fontSize=18;" value="&lt;b&gt;G01 来账完结，适用于全部9个非终态&lt;/b&gt;&lt;br&gt;&lt;br&gt;已R暂不核实 · 待财务核实 · 待售后核实 · 待催款 · 已催款&lt;br&gt;供应反馈异常 · 已承诺退款 · 承诺到期未退 · 商务升级中" vertex="1">
+          <mxGeometry height="130" width="1100" x="160" y="1060" as="geometry" />
+        </mxCell>
+        <mxCell id="done" data-role="state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9BBEFF;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;" value="来账已完结" vertex="1">
+          <mxGeometry height="64" width="200" x="560" y="1350" as="geometry" />
+        </mxCell>
+        <mxCell id="G01" data-rules="G01" edge="1" parent="1" source="allactive" style="html=1;rounded=1;curved=0;edgeStyle=none;endArrow=classic;endFill=1;endSize=7;strokeWidth=1.3;strokeColor=#E3434E;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=15;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" target="done" value="对应外部退票单匹配 / 关联成功&lt;br&gt;供应导入，或财务手工建外部单">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="255" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="end" data-role="symbol" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#202020;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;shape=doubleEllipse;perimeter=ellipsePerimeter;strokeColor=#E3434E;" value="" vertex="1">
+          <mxGeometry height="22" width="22" x="649" y="1470" as="geometry" />
+        </mxCell>
+        <mxCell id="endline" edge="1" parent="1" source="done" style="html=1;rounded=1;curved=0;edgeStyle=none;endArrow=classic;endFill=1;endSize=7;strokeWidth=1.3;strokeColor=#202020;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=15;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" target="end" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="finishnote" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=center;verticalAlign=middle;fontSize=16;fontStyle=0;fontColor=#444444;spacing=0;" value="金额对平或存在差异，都交差异单处理；金额一致、资金到账、整批结算均不是本模块完结门槛。&lt;br&gt;实际已退款但无供应账单：仍不能直接完结，须由财务手工建外部单并关联。" vertex="1">
+          <mxGeometry height="75" width="1200" x="120" y="1530" as="geometry" />
+        </mxCell>
+        <mxCell id="timing" data-role="annotation" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#424242;strokeWidth=1.2;fontColor=#202020;fontFamily=Microsoft YaHei;fontSize=18;spacing=8;strokeColor=none;align=center;verticalAlign=middle;fontSize=15;fontStyle=0;fontColor=#555555;spacing=0;" value="首次等待按有效配置计算，催款后每轮等5个自然日。只填日期时以该日结束为界，有时刻时按该时刻判断。&lt;br&gt;本轮催款超时且仍为已催款，系统标记供应反馈异常。供应已回信但处理人尚未登记，也可能触发。" vertex="1">
+          <mxGeometry height="65" width="1200" x="120" y="1630" as="geometry" />
+        </mxCell>
+        <mxCell id="compare_t19" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#1C354C;strokeColor=#B6CAD9;fillColor=#F4F8FC;spacingLeft=14;spacingRight=12;spacingTop=3;spacingBottom=3;" value="&lt;b&gt;T19　我方定下次核实时间&lt;/b&gt;&lt;br&gt;原承诺11月10日已过，供应商只说“还在审核”。&lt;br&gt;负责人同意继续等，约定11月15日10:00再查。" vertex="1">
+          <mxGeometry height="93" width="640" x="45" y="906" as="geometry" />
+        </mxCell>
+        <mxCell id="compare_t20" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#1C354C;strokeColor=#B6CAD9;fillColor=#F4F8FC;spacingLeft=14;spacingRight=12;spacingTop=3;spacingBottom=3;" value="&lt;b&gt;T20　供应商给出新的承诺退款时间&lt;/b&gt;&lt;br&gt;原承诺11月10日已过，供应商回信承诺“改为11月15日退款”。&lt;br&gt;负责人接受，登记11月15日为新的承诺退款日。" vertex="1">
+          <mxGeometry height="93" width="655" x="715" y="906" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
