@@ -103,7 +103,12 @@
  function overlay(html){closeAnnotation(false);if(!$('#overlay-root').children.length)returnFocus=document.activeElement;$('#overlay-root').innerHTML=html;document.body.style.overflow='hidden';const x=$('#overlay-root .icon-button');if(x)x.focus();}
  function modalShell(title,body,footer,subtitle='',cls=''){return `<div class="veil" data-overlay="true"><section class="modal ${cls}" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal-header"><div><h2 id="modal-title">${title}</h2>${subtitle?`<small>${subtitle}</small>`:''}</div><button class="icon-button" data-action="close" aria-label="关闭弹窗">×</button></div><div class="modal-body">${body}</div><div class="modal-footer">${footer}</div></section></div>`;}
  function field(label,control,required=false){return `<div class="form-row"><div class="form-label">${required?'<span class="required">*</span>':''}${label}</div><div class="form-control">${control}</div></div>`;}
- function dateField(name,value,recordId){const precise=value?.includes('T');return `<div class="date-fields"><select data-date-mode="${name}" data-record="${recordId}" aria-label="${name==='next'?'核实':'承诺'}时间精度">${opt('date','仅日期',precise?'datetime-local':'date')}${opt('datetime-local','日期和时刻',precise?'datetime-local':'date')}</select><input data-field="${name}" type="${precise?'datetime-local':'date'}" value="${e(value)}" aria-label="${name==='next'?'下次核实时间':'承诺退款时间'} ${recordId}"></div><div class="hint">仅日期：截止到当日结束；填写时刻：按该时刻判断（北京时间）。</div>`;}
+ function dateField(name,value,recordId){
+   const precise=value?.includes('T'),verification=name==='next';
+   const precisionLabel=verification?'核实时间精度':'承诺时间精度';
+   const dateLabel=verification?'下次核实时间':'承诺退款时间';
+   return `<div class="date-fields"><select data-date-mode="${name}" aria-label="${precisionLabel}">${opt('date','仅日期',precise?'datetime-local':'date')}${opt('datetime-local','日期和时刻',precise?'datetime-local':'date')}</select><input data-field="${name}" type="${precise?'datetime-local':'date'}" value="${e(value)}" aria-label="${dateLabel}${recordId?' '+recordId:''}"></div><div class="hint">仅日期：截止到当日结束；填写时刻：按该时刻判断（北京时间）。</div>`;
+ }
  function transitionDefaults(r,to){const changed=r.state!==to,role=changed?M.byState[to].role:r.role;return {role,owner:changed?(role==='财务'?r.collector:role===r.role?r.owner:''):r.owner,collector:r.collector,category:r.category,subreason:r.subreason,next:changed?'':r.next,promise:changed?'':r.promise,chaseDate:changed?now.slice(0,10):r.chaseDate,count:r.count+(changed&&to==='chased'?1:0)};}
  function openProcess(ids){
    if(!requireEdit())return;
@@ -111,39 +116,98 @@
    const rs=ids.map(getRecord).filter(Boolean);if(!rs.length)return;
    if(new Set(rs.map(r=>r.state)).size!==1)return toast('不同当前状态可通过“导出Excel → Excel批量流转”逐笔处理；列表弹窗请先选同一状态',true);
    modal={type:'process',ids:rs.map(r=>r.id),from:rs[0].state,to:rs[0].state,note:'',noteHtml:'',drafts:{}};
-   modal.drafts[modal.to]=rs.map(r=>transitionDefaults(r,modal.to));renderProcess();
+   renderProcess();
  }
- function currentDrafts(){return modal.drafts[modal.to]||=(modal.ids.map(id=>transitionDefaults(getRecord(id),modal.to)));}
- function readProcess(){if(!modal||modal.type!=='process')return;const drafts=currentDrafts();$$('#overlay-root [data-form-record]').forEach((card,i)=>{card.querySelectorAll('[data-field]').forEach(input=>drafts[i][input.dataset.field]=input.value);});modal.note=$('#process-note')?.innerText||'';modal.noteHtml=safeHtml($('#process-note')?.innerHTML||'');}
- function processRecord(r,p,multi){
-   const to=modal.to,changed=modal.from!==to;
+ function currentDraft(){
+   const {to,ids,drafts}=modal;
+   if(drafts[to])return drafts[to];
+   const [draft,...others]=ids.map(id=>transitionDefaults(getRecord(id),to));
+   if(others.length){
+     for(const [key,value] of Object.entries(draft)){
+       if(others.some(other=>other[key]!==value))draft[key]='';
+     }
+     Object.assign(draft,{count:'',category:'',subreason:''});
+   }
+   drafts[to]=draft;
+   return draft;
+ }
+ function readProcess(){
+   if(!modal||modal.type!=='process')return;
+   const draft=currentDraft();
+   $$('#overlay-root [data-process-fields] [data-field]').forEach(input=>{draft[input.dataset.field]=input.value;});
+   modal.note=$('#process-note')?.innerText||'';
+   modal.noteHtml=safeHtml($('#process-note')?.innerHTML||'');
+ }
+ function processFields(record,draft,multi){
+   const {to,from}=modal,changed=from!==to;
+   const recordId=multi?'':record.id;
+   const inputLabel=label=>recordId?label+' '+recordId:label;
    let fields='';
-   if(to==='wait')fields+=field('下次核实时间'+ann(2),dateField('next',p.next,r.id),true);
-   if(to==='promised')fields+=field('承诺退款时间'+ann(4),dateField('promise',p.promise,r.id),true);
-   if(to==='chased')fields+=field('最近催款时间',`<input type="date" data-field="chaseDate" value="${e(p.chaseDate)}" aria-label="最近催款时间 ${r.id}"><div class="hint">${changed?'默认带入演示当天，可修正。':'修正信息不触发再次催款。'}</div>`,true)+field('催款次数'+ann(3),`<input type="number" min="0" step="1" data-field="count" value="${p.count}" aria-label="催款次数 ${r.id}"><div class="hint">${changed?`原 ${r.count} 次 → 默认 ${r.count+1} 次，可修正。新一轮计时以本次进入已催款的时间为准。`:'保存当前状态不自动加1、不重置本轮5日计时。'}</div>`,true);
-   if(modal.from==='finance')fields+=field('追款负责人',`<select data-field="collector" aria-label="追款负责人 ${r.id}">${opt('','请选择追款负责人',p.collector)}${M.PEOPLE['财务'].map(s=>opt(s,s,p.collector)).join('')}</select><div class="hint">已带入该供应商的追款负责人。</div>`,changed);
-   fields+=field('处理角色'+ann(7),`<select data-field="role" data-role-select="${r.id}" aria-label="处理角色 ${r.id}">${Object.keys(M.PEOPLE).map(s=>opt(s,s,p.role)).join('')}</select>`,true);
-   fields+=field('处理人',`<select data-field="owner" aria-label="处理人 ${r.id}">${opt('','请选择处理人',p.owner)}${(M.PEOPLE[p.role]||[]).map(s=>opt(s,s,p.owner)).join('')}</select>`,true);
-   const reasons=field('问题原因分类',`<div class="field-pair"><select data-field="category" data-category-select="${r.id}" aria-label="问题原因分类 ${r.id}">${opt('','请选择分类',p.category)}${Object.keys(M.REASONS).map(s=>opt(s,s,p.category)).join('')}</select><input data-field="subreason" list="subreasons-${r.id}" value="${e(p.subreason)}" placeholder="选择或输入问题原因子类" aria-label="问题原因子类 ${r.id}"><datalist id="subreasons-${r.id}">${(M.REASONS[p.category]||[]).map(s=>`<option value="${e(s)}">`).join('')}</datalist></div><div class="hint">原因选项用于原型演示，不作为状态流转的前置校验。${ann(9)}</div>`);
+   if(to==='wait')fields+=field('下次核实时间'+ann(2),dateField('next',draft.next,recordId),true);
+   if(to==='promised')fields+=field('承诺退款时间'+ann(4),dateField('promise',draft.promise,recordId),true);
+   if(to==='chased'){
+     const chaseHelp=changed?'默认带入演示当天，可修正。':'修正信息不触发再次催款。';
+     const countHelp=multi
+       ? (changed?'留空时按各笔原次数加 1。填写后统一为填写的次数。':'留空时保留各笔原次数。填写后统一修正，本轮计时继续。')
+       : (changed?`原 ${record.count} 次 → 默认 ${record.count+1} 次，可修正。新一轮计时以本次进入已催款的时间为准。`:'保存当前状态不自动加1、不重置本轮5日计时。');
+     fields+=field('最近催款时间',`<input type="date" data-field="chaseDate" value="${e(draft.chaseDate)}" aria-label="${inputLabel('最近催款时间')}"><div class="hint">${chaseHelp}</div>`,true);
+     fields+=field('催款次数'+ann(3),`<input type="number" min="0" step="1" data-field="count" value="${e(draft.count)}" aria-label="${inputLabel('催款次数')}"><div class="hint">${countHelp}</div>`,!multi);
+   }
+   if(from==='finance'){
+     const collectorHelp=multi?'选择后统一应用到全部所选记录。':'已带入该供应商的追款负责人。';
+     fields+=field('追款负责人',`<select data-field="collector" aria-label="${inputLabel('追款负责人')}">${opt('','请选择追款负责人',draft.collector)}${M.PEOPLE['财务'].map(s=>opt(s,s,draft.collector)).join('')}</select><div class="hint">${collectorHelp}</div>`,changed);
+   }
+   const rolePlaceholder=multi?opt('','请选择统一处理角色',draft.role):'';
+   const ownerPlaceholder=multi?'请选择统一处理人':'请选择处理人';
+   fields+=field('处理角色'+ann(7),`<select data-field="role" data-role-select aria-label="${inputLabel('处理角色')}">${rolePlaceholder}${Object.keys(M.PEOPLE).map(s=>opt(s,s,draft.role)).join('')}</select>`,true);
+   fields+=field('处理人',`<select data-field="owner" aria-label="${inputLabel('处理人')}">${opt('',ownerPlaceholder,draft.owner)}${(M.PEOPLE[draft.role]||[]).map(s=>opt(s,s,draft.owner)).join('')}</select>`,true);
+   const reasonsId='subreasons-'+(recordId||'batch');
+   const reasonHelp=multi?'填写后统一更新。两个字段留空时，沿用各笔已有原因。':'原因选项用于原型演示，不作为状态流转的前置校验。';
+   const reasons=field('问题原因分类',`<div class="field-pair"><select data-field="category" data-category-select aria-label="${inputLabel('问题原因分类')}">${opt('','请选择分类',draft.category)}${Object.keys(M.REASONS).map(s=>opt(s,s,draft.category)).join('')}</select><input data-field="subreason" list="${reasonsId}" value="${e(draft.subreason)}" placeholder="选择或输入问题原因子类" aria-label="${inputLabel('问题原因子类')}"><datalist id="${reasonsId}">${(M.REASONS[draft.category]||[]).map(s=>`<option value="${e(s)}">`).join('')}</datalist></div><div class="hint">${reasonHelp}${ann(9)}</div>`);
    fields+=changed?`<details class="extra-fields"><summary>补充问题原因（选填）</summary>${reasons}</details>`:reasons;
-   return `<div data-form-record="${r.id}" class="${multi?'batch-record':''}">${multi?`<div class="record-heading"><strong>${r.id}</strong> · ${r.passenger} · ${r.supplier}<small class="muted">　${r.ticket}</small></div>`:''}${fields}</div>`;
+   return `<div data-process-fields>${fields}</div>`;
  }
  function renderProcess(){
-   const rs=modal.ids.map(getRecord),from=modal.from,to=modal.to,changed=from!==to,multi=rs.length>1,drafts=currentDrafts();
+   const rs=modal.ids.map(getRecord),from=modal.from,to=modal.to,changed=from!==to,multi=rs.length>1,draft=currentDraft();
    const info = M.processingHint(from, to);
-   let body=`<div id="form-error" class="error-banner" role="alert"></div><div class="context-strip">${multi?`<strong>批量处理 ${rs.length} 笔</strong><span>全部当前状态：${M.byState[from].label}</span><span>请核对每笔的日期与处理人</span>`:`<strong>${rs[0].order}</strong><span>${rs[0].passenger}</span><span>${rs[0].supplier}</span><span>${rs[0].ticket}</span>`}</div>`;
+   let body=`<div id="form-error" class="error-banner" role="alert"></div><div class="context-strip">${multi?`<strong>批量处理 ${rs.length} 笔</strong><span>当前状态为${M.byState[from].label}</span><span>每个字段填一次，应用到全部所选记录</span>`:`<strong>${rs[0].order}</strong><span>${rs[0].passenger}</span><span>${rs[0].supplier}</span><span>${rs[0].ticket}</span>`}</div>`;
    body+=field('处理状态'+ann(5),`<div class="status-options">${M.allowed(from).map(s=>`<button type="button" class="status-option ${to===s?'selected':''}" data-action="target" data-target="${s}" aria-pressed="${to===s}">${M.byState[s].label}${s===from?'（当前）':''}</button>`).join('')}</div><div class="hint">${changed?'流转规则 '+M.edges[from][to]+' · 仅列出当前可人工到达的状态':'默认选中当前状态，可直接修改信息。自动触发的目标状态不提供人工选择。'}</div>`,true);
    body+=field('处理提示',`<div class="notice ${to==='closed'?'warn':''}"><span class="info-mark">i</span><span>${e(info)}</span></div>`);
    if(!multi&&to==='wait')body+=field('已R时间 / 时长',`<div class="readonly-line">${date(rs[0].rDate)}　/　已R ${M.daySpan(rs[0].rDate,now)} 天 <span class="muted">（系统带入）</span></div>`);
-   if(multi&&['wait','promised','chased'].includes(to))body+=`<div class="batch-fill"><label for="batch-date">统一填写${to==='wait'?'下次核实时间':to==='promised'?'承诺退款日期':'最近催款日期'}</label><input id="batch-date" type="date" aria-label="统一填写日期"><button data-action="apply-batch-date">应用到每笔</button><span>应用后仍可逐笔调整</span></div>`;
-   body+=rs.map((r,i)=>processRecord(r,drafts[i],multi)).join('');
+   body+=processFields(rs[0],draft,multi);
    body+=field('说明',editor('process-note',changed?({service:'可补充待售后核实的事项',wait:'可记录供应反馈及接受继续等待的原因',promised:'可记录供应的承诺内容',business:'可记录升级原因或商务处理结果',chased:'可记录催款邮件主题或发送情况',closed:'可记录核实依据'}[to]||'可补充本次处理说明'):'可补充核实情况、供应回复或处理进展'));
    overlay(modalShell(multi?'批量处理':'处理',body,`<span class="hint">${multi?'全部记录校验通过后统一保存':'带 * 的字段必填，说明选填'}</span><div class="flex"><button data-action="close">取消</button><button class="primary" data-action="save-process">${changed?(multi?'确认流转 '+rs.length+' 笔':'确认流转'):'保存信息'}</button></div>`,'已R未退 · 状态流转处理'));
    $('#process-note').innerHTML=modal.noteHtml||e(modal.note);
  }
  function formError(text){const el=$('#form-error');if(el){el.textContent=text;el.classList.add('visible');el.scrollIntoView({block:'nearest',behavior:'smooth'});}else toast(text,true);}
  function saveProcess(){
-   readProcess();try{const to=modal.to,changed=modal.from!==to,count=modal.ids.length;M.save(records,modal.ids,to,currentDrafts().map(p=>({...p,note:modal.note,noteHtml:modal.noteHtml})),now);persist();closeOverlay();selected.clear();render();toast(changed?`${count} 笔记录已流转为「${M.byState[to].label}」`:'信息已保存，当前状态保持不变');}catch(err){formError(err.message);}
+   const countField=$('#overlay-root [data-field="count"]');
+   if(countField?.validity.badInput)return formError('催款次数必须为非负整数');
+   readProcess();
+   const {ids,to,from,note,noteHtml}=modal;
+   const changed=from!==to,multi=ids.length>1;
+   const shared={...currentDraft(),note,noteHtml};
+   if(multi){
+     if(from!=='finance'||(!changed&&!shared.collector))delete shared.collector;
+     if(!shared.category&&!shared.subreason){
+       delete shared.category;
+       delete shared.subreason;
+     }
+   }
+   const payloads=ids.map(id=>{
+     if(!multi||to!=='chased'||shared.count!=='')return shared;
+     return {...shared,count:transitionDefaults(getRecord(id),to).count};
+   });
+   try{
+     M.save(records,ids,to,payloads,now);
+     persist();
+     closeOverlay();
+     selected.clear();
+     render();
+     toast(changed?`${ids.length} 笔记录已流转为「${M.byState[to].label}」`:'信息已保存，当前状态保持不变');
+   }catch(err){
+     formError(err.message);
+   }
  }
  function openBatchCount(){const rs=[...selected].map(getRecord);if(!rs.length)return;modal={type:'count',ids:rs.map(r=>r.id)};overlay(modalShell('批量编辑字段',`<div id="form-error" class="error-banner" role="alert"></div><div class="notice"><span class="info-mark">i</span><span>仅修正催款次数，保持每笔记录的状态和本轮计时不变。${ann(3)}</span></div><div style="margin-top:22px">${field('催款次数',`<input id="batch-count-value" type="number" min="0" step="1" placeholder="输入修正后的次数" aria-label="统一催款次数">`,true)}</div><div class="batch-preview"><div><span>记录 / 乘机人</span><span>当前状态</span><span>当前次数</span></div>${rs.map(r=>`<div><span>${r.id} · ${r.passenger}</span><span>${M.byState[r.state].label}</span><span>${r.count} 次</span></div>`).join('')}</div>`,`<span class="hint">将应用到选中的 ${rs.length} 笔记录</span><div class="flex"><button data-action="close">取消</button><button class="primary" data-action="save-count">保存修改</button></div>`,'可同时修正不同状态记录的次数','medium'));}
  function exportExcel(){
@@ -217,7 +281,7 @@
   ['催款计数与5日等待','仅实际发送邮件后才能进入已催款。次数默认原值加1，最近催款日期默认当天，两者可人工修正；本轮5个自然日从本次进入时间起算。修改当前信息或单独修正次数不重置计时。系统不读邮箱：超时仍停留已催款，自动转供应反馈异常，即使供应实际已有回复。','T08、T09、T13、T18；无已催款→已催款流转'],
   ['明确承诺与到期判断','接受供应承诺须有明确且尚未到期的日期或时刻。“下期”等说法应先明确日期。只填日期则当天结束后判断；填写时刻则按时刻判断。到期仍未关联外部单，自动转承诺到期未退。“未退”不代表已核实资金未到账。','T11、T15、T17、T20、T23'],
   ['人工流转范围与终态','状态选项仅含当前状态及状态机允许的人工目标。当前状态用于修改信息，不生成自循环流转。来账已完结只能由系统关联结果触发；未R已关闭仅能由财务 / 售后核实进入。两种终态均不回退、不重开。商务拒退或无结果继续商务跟进，不新增放弃追款终态。','主流程：T03—T23；状态定义表'],
-  ['批量与并发校验','列表勾选流转用于同一当前状态，可统一填写日期后逐笔调整。Excel支持混合当前状态与目标状态，覆盖所有状态下的合法人工处理；自动流转和终态限制仍遵守既有规则。承诺退款日期、下次核实时间、最近催款时间及处理人等按每笔目标状态校验。页面和 Excel 按目标状态展示处理提示，核对后点击提交。目标留空跳过；校验不通过的行不更新；确认后仅更新通过的行。提交前再次核对导出校验标识、当前状态和外部单关联结果，阻止过期文件及重复导入。生产系统仍须实现真实并发控制。','已确认规则11、12；2026-11-23 Excel批量流转要求'],
+  ['批量与并发校验','列表勾选流转用于同一当前状态。日期、处理人等字段只填一次，统一应用到全部所选记录。必填项有不同的默认值时，须填写一个共同值。Excel可逐笔填写不同的值，也支持混合当前状态与目标状态，覆盖所有状态下的合法人工处理；自动流转和终态限制仍遵守既有规则。承诺退款日期、下次核实时间、最近催款时间及处理人等按每笔目标状态校验。页面和 Excel 按目标状态展示处理提示，核对后点击提交。目标留空跳过；校验不通过的行不更新；确认后仅更新通过的行。提交前再次核对导出校验标识、当前状态和外部单关联结果，阻止过期文件及重复导入。生产系统仍须实现真实并发控制。','已确认规则11、12；2026-11-23 Excel批量流转要求'],
   ['处理人与追款负责人','本模块处理人不是原退票处理人。除首次生成可空外，后续保存均需处理角色和处理人。财务角色默认带入供应商对应追款负责人；转售后、商务须指定人员。人员与供应商映射是虚构演示配置，实际按权限及组织配置。','流转表备注、状态定义表；自动流转时按配置分配'],
   ['原型演示与真实系统','原型只在本浏览器保存演示修改，不发送催款邮件，不查询票号、不导入真实账单、不核实资金。可在演示场景中切换账号编辑权限：两个列表入口始终可见，编辑和查看复用同一详情页；编辑需权限，查看始终只读。后台事件可模拟时间到期与外部单关联，真实账号鉴权、定时任务、邮箱、关联接口和并发控制尚未接入。演示时钟固定从2026-11-20 12:00开始。','点击“演示场景”可切换权限、推进时间或演示来账；恢复数据会重置'],
   ['待确认的界面约定','主流程要求问题原因分类及子类，但未给字典，当前选项仅供演示。主流程列有删除入口，未定义业务删除权限、条件及审计方式：本原型仅在二次确认后移除本地示例，可恢复。正式系统的删除规则须另行确认，不代表允许删除真实追款记录。','界面设计：基础信息区、行操作；未扩写正式业务规则'],
@@ -265,7 +329,7 @@
  function removeMore(){document.querySelector('.more-menu')?.remove();}
  function showMore(button){removeMore();const box=button.getBoundingClientRect(),menu=document.createElement('div');menu.className='more-menu';menu.style.right=Math.max(12,window.innerWidth-box.right)+'px';menu.style.top=Math.min(window.innerHeight-55,box.bottom+4)+'px';menu.innerHTML=`<button class="danger" data-action="delete" data-id="${button.dataset.id}">删除</button>`;document.body.append(menu);}
  function closeOrReturn(){closeOverlay();}
- const writeActions=new Set(['add-rule','remove-rule','save-config','process','batch-transition','batch-count','target','save-process','save-count','apply-batch-date','excel-import','excel-commit','compose-note','save-note','format','demo-bill','run-bill','advance-time','add-day','delete','confirm-delete','reset','confirm-reset']);
+ const writeActions=new Set(['add-rule','remove-rule','save-config','process','batch-transition','batch-count','target','save-process','save-count','excel-import','excel-commit','compose-note','save-note','format','demo-bill','run-bill','advance-time','add-day','delete','confirm-delete','reset','confirm-reset']);
  document.addEventListener('click',event=>{
    const b=event.target.closest('[data-action]');if(!b){if(!event.target.closest('.more-menu'))removeMore();return;}const {action,id}=b.dataset;
    if(action!=='more')removeMore();
@@ -285,7 +349,6 @@
     case 'excel-import':openExcelImport();break;
     case 'excel-commit':commitExcel();break;
     case 'excel-feedback':downloadFeedback();break;
-    case 'apply-batch-date':{const value=$('#batch-date').value;if(!value){formError('请先选择要统一填写的日期');break;}readProcess();const key=modal.to==='wait'?'next':modal.to==='promised'?'promise':'chaseDate';currentDrafts().forEach(p=>p[key]=value);renderProcess();toast('日期已应用到每笔，仍可逐笔修改');break;}
     case 'target':readProcess();modal.to=b.dataset.target;renderProcess();break;
     case 'save-process':saveProcess();break;
     case 'clear-filters':filters=emptyFilters();page=1;selected.clear();renderList();break;
@@ -340,8 +403,8 @@
    if(el.matches('[data-select]')){el.checked?selected.add(el.dataset.select):selected.delete(el.dataset.select);renderList();}
    if(el.id==='select-page'){filtered().slice((page-1)*pageSize,page*pageSize).forEach(r=>el.checked?selected.add(r.id):selected.delete(r.id));renderList();}
    if(el.id==='page-size'){pageSize=Number(el.value);page=1;renderList();}
-   if(el.matches('[data-role-select]')){const row=el.closest('[data-form-record]'),owner=row.querySelector('[data-field="owner"]');owner.innerHTML=opt('','请选择处理人')+M.PEOPLE[el.value].map(p=>opt(p)).join('');}
-   if(el.matches('[data-category-select]')){const row=el.closest('[data-form-record]');row.querySelector('[data-field="subreason"]').value='';row.querySelector('datalist').innerHTML=(M.REASONS[el.value]||[]).map(s=>`<option value="${e(s)}">`).join('');}
+   if(el.matches('[data-role-select]')){const fields=el.closest('[data-process-fields]'),owner=fields.querySelector('[data-field="owner"]');owner.innerHTML=opt('',owner.options[0].textContent)+(M.PEOPLE[el.value]||[]).map(p=>opt(p)).join('');}
+   if(el.matches('[data-category-select]')){const fields=el.closest('[data-process-fields]');fields.querySelector('[data-field="subreason"]').value='';fields.querySelector('datalist').innerHTML=(M.REASONS[el.value]||[]).map(s=>`<option value="${e(s)}">`).join('');}
    if(el.matches('[data-date-mode]')){const input=el.parentElement.querySelector('input'),old=input.value;input.type=el.value;input.value=old?(el.value==='date'?old.slice(0,10):(old.includes('T')?old:old+'T18:00')):'';}
  });
  document.addEventListener('keydown',event=>{
