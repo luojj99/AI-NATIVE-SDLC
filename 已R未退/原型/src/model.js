@@ -1,7 +1,7 @@
 /* 仅为原型的本地演示模型，不发送邮件、不接入真实账单。 */
 window.RefundModel = (() => {
   const STATES = [
-    ['wait','已R暂不核实','gray','财务'],['finance','待财务核实','blue','财务'],
+    ['wait','暂缓核实','gray','财务'],['finance','待财务核实','blue','财务'],
     ['service','待售后核实','purple','售后'],['ready','待催款','orange','财务'],
     ['chased','已催款','cyan','财务'],['abnormal','供应反馈异常','red','财务'],
     ['promised','已承诺退款','blue','财务'],['overdue','承诺到期未退','red','财务'],
