@@ -8,6 +8,8 @@ window.RefundExcel = (() => {
     ['note','说明',40],['originalCount','当前催款次数',16],['count','催款次数修正值',18],['token','导出校验标识',22]
   ];
   const text=v=>String(v??'').trim();
+  // 旧版导出文件的状态值也可继续回填。
+  const normalizeStateLabel=value=>text(value)==='已R暂不核实'?M.byState.wait.label:value;
   const stateId=v=>M.STATES.find(s=>s.label===text(v)||s.id===text(v))?.id;
   const blank=v=>v===null||v===undefined||text(v)==='';
   function signature(r){
@@ -22,7 +24,7 @@ window.RefundExcel = (() => {
     ['目标状态','必填项','填写规则'],
     ['全部人工更新','处理角色、处理人；从待财务核实流转另需追款负责人','角色与人员须存在且对应；目标与当前相同时仅修改信息，不增加催款次数或重置计时'],
     ['已承诺退款','承诺退款日期','进入时须为明确且尚未到期的日期或时刻，不能填写“下期”'],
-    ['已R暂不核实','下次核实时间','进入时截止时间须晚于当前演示时间'],
+    [M.byState.wait.label,'下次核实时间','进入时截止时间须晚于当前演示时间'],
     ['已催款','最近催款时间','填写实际催款日期。催款次数默认加1，修正值选填，须为非负整数。'],
     ['当前状态','目标状态','处理提示'],
     ...Object.entries(M.edges).flatMap(([from,targets])=>Object.keys(targets).map(to=>[M.byState[from].label,M.byState[to].label,M.processingHint(from,to)]))
@@ -94,7 +96,8 @@ window.RefundExcel = (() => {
   }
   function validate(rows,records,now){
     const duplicates=new Set(rows.map(r=>text(r.id)).filter((id,i,a)=>id&&a.indexOf(id)!==i));
-    return rows.map(row=>{
+    return rows.map(input=>{
+      const row={...input,from:normalizeStateLabel(input.from),to:normalizeStateLabel(input.to)};
       const id=text(row.id),r=records.find(r=>r.id===id),to=stateId(row.to),from=stateId(row.from),errors=[...(row.parseErrors||[])];
       if(blank(row.to))return {...row,id,kind:'skip',errors:[],message:'目标状态未填写，保留原记录'};
       if(!r)errors.push('记录编号不存在');
